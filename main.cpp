@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 std::string runlengthEncode1(const std::string &in){
     if(in.size()<2) return in;
@@ -85,8 +86,38 @@ std::string runlengthDecode(const std::string &in){
     return buf;
 }
 
-void printParenthesesList(int n){
+void printParenthesesList(size_t n){
+    static std::vector<std::vector<std::string> > buf = {{"()"}};
+//    std::cout << std::endl<<std::string(50,'=')<<buf.size()<<std::endl;
+    if(n<1){
+        std::cout <<""<<std::endl;
+        return;
+    } else if(n==1){
+        std::cout <<"()"<<std::endl;
+        return;
+    }
+    if(buf.size() == n-1){
 
+        /////////////////////////////
+        std::vector<std::string> buf_n;
+        for(size_t i=0;i<buf.at(n-2).size();++i){
+            std::string one = "(" + buf.at(n-2).at(i) + ")";
+            buf_n.push_back(one);
+            std::cout<< one<<std::endl;
+        }
+        /////////////////////////////
+        for(size_t i=0;i<n-2;++i){
+            for(size_t j=0;j<buf.at(i).size();++j){
+                for(size_t k=0;k<buf.at(n-2-i).size();++k){
+                    std::string one = buf.at(i).at(j).append(buf.at(n-2-i).at(k));
+                    buf_n.push_back(one);
+                    std::cout<< one<<std::endl;
+                }
+            }
+        }
+        buf.push_back(buf_n);
+        std::cout <<std::string(30,'=')<<buf_n.size()<<std::endl;
+    }
 }
 
 int main()
@@ -103,5 +134,8 @@ int main()
         std::string test = "a3sj5f2gd4sd2f2gr4";
         std::cout <<test<<":\t"<< runlengthDecode(test)<< std::endl;
     }
+
+    for(size_t i=1;i<7;++i)
+        printParenthesesList(i);
     return 0;
 }
